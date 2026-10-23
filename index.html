@@ -425,25 +425,34 @@
             accBank: "ธนาคารกสิกรไทย (KBANK)",
             accWallet: "081-234-5678"
         };
+let audioPlayer = null;
+let isMusicPlaying = false;
 
-        function toggleMusic() {
-            playCuteSound();
-            const container = document.getElementById('youtubePlayerContainer');
-            const icon = document.getElementById('musicIcon');
-            const status = document.getElementById('musicStatus');
-            
-            if (!isMusicPlaying) {
-                container.innerHTML = `<iframe width="200" height="200" src="https://www.youtube.com/embed/dmepKfmk7ms?autoplay=1&loop=1&playlist=dmepKfmk7ms" frameborder="0" allow="autoplay"></iframe>`;
-                icon.className = "fa-solid fa-pause";
-                status.innerText = "กำลังเล่นเพลง 🎶";
-                isMusicPlaying = true;
-            } else {
-                container.innerHTML = "";
-                icon.className = "fa-solid fa-play";
-                status.innerText = "หยุดเล่นเพลง";
-                isMusicPlaying = false;
-            }
-        }
+       function toggleMusic() {
+    playCuteSound();
+    const status = document.getElementById('musicStatus');
+    const icon = document.getElementById('musicIcon');
+    
+    if (!audioPlayer) {
+        audioPlayer = new Audio('Y2Mate.st - THAISUBBTS  - Magic Shop.mp3');
+        audioPlayer.loop = true;
+    }
+
+    if (!isMusicPlaying) {
+        audioPlayer.play().then(() => {
+            icon.className = "fa-solid fa-pause";
+            status.innerText = "กำลังเล่นเพลง 🎶";
+            isMusicPlaying = true;
+        }).catch(err => {
+            console.log("Autoplay blocked:", err);
+        });
+    } else {
+        audioPlayer.pause();
+        icon.className = "fa-solid fa-play";
+        status.innerText = "หยุดเล่นเพลง";
+        isMusicPlaying = false;
+    }
+}
 
         function playCuteSound() {
             try {
