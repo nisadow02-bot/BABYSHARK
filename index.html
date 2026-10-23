@@ -424,31 +424,33 @@
             accWallet: "081-234-5678"
         };
 
-        function toggleMusic() {
-            playCuteSound();
-            const status = document.getElementById('musicStatus');
-            const icon = document.getElementById('musicIcon');
-            
-            if (!audioPlayer) {
-                audioPlayer = new Audio('Y2Mate.st - THAISUBBTS - Magic Shop.mp3');
-                audioPlayer.loop = true;
-            }
+       function toggleMusic() {
+    playCuteSound();
+    const status = document.getElementById('musicStatus');
+    const icon = document.getElementById('musicIcon');
+    
+    if (!audioPlayer) {
+        // ใช้ลิงก์ไฟล์ที่เข้ารหัสช่องว่าง (%20) ให้ถูกต้องเพื่อให้เบราว์เซอร์อ่านออก
+        audioPlayer = new Audio('Y2Mate.st%20-%20THAISUBBTS%20-%20Magic%20Shop.mp3');
+        audioPlayer.loop = true;
+    }
 
-            if (!isMusicPlaying) {
-                audioPlayer.play().then(() => {
-                    icon.className = "fa-solid fa-pause";
-                    status.innerText = "กำลังเล่นเพลง 🎶";
-                    isMusicPlaying = true;
-                }).catch(err => {
-                    console.log("Autoplay blocked:", err);
-                });
-            } else {
-                audioPlayer.pause();
-                icon.className = "fa-solid fa-play";
-                status.innerText = "หยุดเล่นเพลง";
-                isMusicPlaying = false;
-            }
-        }
+    if (!isMusicPlaying) {
+        audioPlayer.play().then(() => {
+            icon.className = "fa-solid fa-pause";
+            status.innerText = "กำลังเล่นเพลง 🎶";
+            isMusicPlaying = true;
+        }).catch(err => {
+            console.log("Autoplay blocked:", err);
+        });
+    } else {
+        audioPlayer.pause();
+        icon.className = "fa-solid fa-play";
+        status.innerText = "หยุดเล่นเพลง";
+        isMusicPlaying = false;
+    }
+}
+
 
         function playCuteSound() {
             try {
