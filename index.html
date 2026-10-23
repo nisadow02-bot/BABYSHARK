@@ -54,29 +54,35 @@
             90% { opacity: 0.8; }
             100% { opacity: 0; top: 110%; transform: translateX(100px) rotate(360deg); }
         }
-        @keyframes spinSlow {
+        .music-spin {
+            animation: spin 3s linear infinite;
+        }
+        @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        .animate-spin-slow { animation: spinSlow 6s linear infinite; }
     </style>
 </head>
 <body class="bg-pastelCream text-gray-700 min-h-screen flex flex-col">
 
     <div class="rose-container" id="roseContainer"></div>
 
-    <!-- Floating Music Player Widget -->
-    <div class="fixed bottom-4 left-4 z-50 bg-white/90 backdrop-blur-md px-3 py-2 rounded-2xl shadow-lg border border-pastelBlue flex items-center space-x-2">
-        <div class="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 animate-spin-slow">
-            <i class="fa-solid fa-music"></i>
-        </div>
-        <div class="text-xs">
-            <p class="font-bold text-gray-700">เพลงประกอบร้าน</p>
-            <p class="text-[10px] text-gray-400" id="musicStatus">กดเล่นเพลง</p>
-        </div>
-        <button onclick="toggleMusic()" id="musicToggleBtn" class="bg-sky-500 hover:bg-sky-600 text-white w-8 h-8 rounded-xl flex items-center justify-center text-xs transition-all shadow-sm">
-            <i class="fa-solid fa-play" id="musicIcon"></i>
+    <!-- Audio Element (BTS - Magic Shop Background Music) -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://nisadow02-bot.github.io/Y2Mate.st%20-%20THAISUBBTS%20%20-%20Magic%20Shop.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating Cute Music Player Widget -->
+    <div class="fixed bottom-5 left-5 z-50 flex items-center space-x-2 bg-white/90 backdrop-blur-md p-2 pr-4 rounded-full border-2 border-sky-300 shadow-lg transition-all hover:scale-105">
+        <button id="musicToggleBtn" onclick="playCuteSound(); toggleMusic()" class="w-10 h-10 rounded-full bg-gradient-to-tr from-sky-400 to-sky-300 flex items-center justify-center text-white shadow-inner transition-transform focus:outline-none">
+            <i id="musicIcon" class="fa-solid fa-music"></i>
         </button>
+        <div class="flex flex-col">
+            <span class="text-[11px] font-bold text-sky-600 flex items-center">
+                <i class="fa-solid fa-compact-disc text-sky-400 mr-1"></i> BTS - Magic Shop
+            </span>
+            <span id="musicStatusText" class="text-[9px] text-gray-400 font-medium">กดเล่นเพลง...</span>
+        </div>
     </div>
 
     <!-- Navigation Bar -->
@@ -382,7 +388,7 @@
                 </div>
                 <button type="submit" class="w-full bg-sky-500 text-white font-bold py-2.5 rounded-xl text-sm shadow-sm">เข้าสู่ระบบ</button>
             </form>
-            <div class="mt-4 text-center"><button onclick="closeAuthModal()" class="text-xs text-gray-400">ยกเลิก</button></div>
+            <div class="mt-4 text-center"><button onclick="playCuteSound(); closeAuthModal()" class="text-xs text-gray-400">ยกเลิก</button></div>
         </div>
     </div>
 
@@ -399,7 +405,7 @@
                 </div>
                 <button type="submit" class="w-full bg-sky-600 text-white font-bold py-2.5 rounded-xl text-sm shadow-md">เข้าสู่ระบบ</button>
             </form>
-            <div class="mt-4 text-center"><button onclick="closeAdminModal()" class="text-xs text-gray-400">ยกเลิก</button></div>
+            <div class="mt-4 text-center"><button onclick="playCuteSound(); closeAdminModal()" class="text-xs text-gray-400">ยกเลิก</button></div>
         </div>
     </div>
 
@@ -409,8 +415,6 @@
 
         let currentUser = null;
         let isAdminLoggedIn = false;
-        let audioPlayer = null;
-        let isMusicPlaying = false;
 
         let products = [];
         let orders = [];
@@ -425,28 +429,21 @@
         };
 
         function toggleMusic() {
-            playCuteSound();
-            const status = document.getElementById('musicStatus');
+            const audio = document.getElementById('bgMusic');
             const icon = document.getElementById('musicIcon');
-            
-            if (!audioPlayer) {
-                audioPlayer = new Audio('Y2Mate.st - THAISUBBTS - Magic Shop.mp3');
-                audioPlayer.loop = true;
-            }
+            const statusText = document.getElementById('musicStatusText');
 
-            if (!isMusicPlaying) {
-                audioPlayer.play().then(() => {
-                    icon.className = "fa-solid fa-pause";
-                    status.innerText = "กำลังเล่นเพลง 🎶";
-                    isMusicPlaying = true;
+            if (audio.paused) {
+                audio.play().then(() => {
+                    icon.className = "fa-solid fa-compact-disc music-spin";
+                    if (statusText) statusText.innerText = "กำลังเล่นเพลง 🎶";
                 }).catch(err => {
                     console.log("Autoplay blocked:", err);
                 });
             } else {
-                audioPlayer.pause();
-                icon.className = "fa-solid fa-play";
-                status.innerText = "หยุดเล่นเพลง";
-                isMusicPlaying = false;
+                audio.pause();
+                icon.className = "fa-solid fa-music";
+                if (statusText) statusText.innerText = "หยุดเล่นเพลง";
             }
         }
 
@@ -893,4 +890,3 @@
     </script>
 </body>
 </html>
-
